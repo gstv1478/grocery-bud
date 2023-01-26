@@ -21,10 +21,40 @@ function addItem(e) {
 
     const id = new Date().getTime().toString();
     if (value && !editFlag) {
-        console.log("add item to the list");
+        const element = document.createElement('article');
+        //add class
+        element.classList.add('grocery-item');
+        const attr = document.createAttribute('data-id');
+        attr.value = id;
+        element.setAttributeNode(attr);
+        element.innerHTML = `<p class="title">${value}</p>
+        <div class="btn-container">
+            <button type="button" class="edit-btn">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="delete-btn">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>`;
+        //append child 
+        list.appendChild(element);
+        //display alert
+        displayAlert('item added to the list', 'sucess')
     } else if (value !== "" && editFlag === true) {
         console.log("editing");
     } else  {
-        console.log("empty value");
+        displayAlert("please enter value", "danger")
     }
+}
+
+//display alert
+function displayAlert(text, action) {
+    alert.textContent = text;
+    alert.classList.add(`alert-${action}`);
+
+    //remove alert
+    setTimeout(function() {
+        alert.textContent = "";
+        alert.classList.remove(`alert-${action}`);
+    }, 1000)
 }
