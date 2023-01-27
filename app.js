@@ -38,6 +38,10 @@ function addItem(e) {
                 <i class="fas fa-trash"></i>
             </button>
         </div>`;
+        const deleteBtn = element.querySelector(".delete-btn");
+        const editBtn = element.querySelector(".edit-btn");
+        deleteBtn.addEventListener("click", deleteItem);
+        editBtn.addEventListener("click", editItem);
         //append child 
         list.appendChild(element);
         //display alert
@@ -48,7 +52,11 @@ function addItem(e) {
         //set back to default
         setBackToDefault();
     } else if (value !== "" && editFlag === true) {
-        console.log("editing");
+        editElement.innerHTML = value;
+        displayAlert("value changed", "sucess");
+        //edit local storage
+        editLocalStorage(editID, value);
+        setBackToDefault();
     } else  {
         displayAlert("please enter value", "danger")
     }
@@ -81,6 +89,31 @@ function clearItems() {
     //localStorage.removeItem('list');
 }
 
+//delete function
+function deleteItem(e) {
+    const element = e.currentTarget.parentElement.parentElement;
+    const id = element.dataset.id;
+    list.removeChild(element);
+    if (list.children === 0) {
+        container.classList.remove("show-container");
+    }
+    displayAlert("item removed", "danger");
+    setBackToDefault();
+    //remove from local storage
+    //removeFromLocalStorage(id);
+}
+
+//  edit function
+function editItem(e) {
+    const element = e.currentTarget.parentElement.parentElement;
+    //set edit item 
+    editElement = e.currentTarget.parentElement.previousElementSibling;
+    //set form value
+    grocery.value = editElement.innerHTML;
+    editFlag = true;
+    editID = element.dataset.id;
+    submitBtn.textContent = "edit";
+}
 //set back to default 
 function setBackToDefault() {
     grocery.value = "";
@@ -91,5 +124,23 @@ function setBackToDefault() {
 
 // ********* LOCAL STORAGE ************
 function addToLocalStorage(id, value) {
-    console.log("added to local storage");
+    const grocery =  {id, value};
+    let items = getLocalStorage();
+
+    item.push(grocery);
+    localStorage.setItem("list", JSON.stringify(items));
 }
+function removeFromLocalStorage(id) {}
+function editLocalStorage(id, value) {}
+function getLocalStorage() {
+    return localStorage.getItem("list")
+    ? JSON.parse(localStorage.getItem("list"))
+    : [];
+}
+//localStorage
+//setItem
+//getItem
+//removeItem
+//save as strings
+//localStorage.setItem("orange", JSON.stringify(["item", "item2"]));
+//*****SETUP ITEMS */
