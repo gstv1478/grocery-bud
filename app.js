@@ -4,7 +4,7 @@ const grocery = document.getElementById("grocery");
 const submitBtn = document.querySelector(".submit-btn");
 const container = document.querySelector(".grocery-container");
 const list = document.querySelector(".grocery-list");
-const clearBtn = document.querySelector(".clearBtn");
+const clearBtn = document.querySelector(".clear-btn");
 
 //edit option
 let editElement;
@@ -14,6 +14,8 @@ let editID = "";
 // ****** EVENT LISTENERS *********
 // submit form
 form.addEventListener("submit", addItem);
+// clear items
+clearBtn.addEventListener('click', clearItems)
 // ****** FUNCTION *********
 function addItem(e) {
     e.preventDefault();
@@ -39,7 +41,12 @@ function addItem(e) {
         //append child 
         list.appendChild(element);
         //display alert
-        displayAlert('item added to the list', 'sucess')
+        displayAlert('item added to the list', 'success')
+        //show container
+        container.classList.add("show-container");
+        // add to local storage
+        //set back to default
+        setBackToDefault();
     } else if (value !== "" && editFlag === true) {
         console.log("editing");
     } else  {
@@ -56,5 +63,33 @@ function displayAlert(text, action) {
     setTimeout(function() {
         alert.textContent = "";
         alert.classList.remove(`alert-${action}`);
-    }, 1000)
+    }, 1000);
+}
+
+//clear items
+function clearItems() {
+    const items = document.querySelectorAll(".grocery-item");
+
+    if (items.length > 0) {
+        items.forEach(function (item) {
+            list.removeChild(item);
+        });
+    }
+    container.classList.remove("show-container");
+    displayAlert("empty list", "danger");
+    setBackToDefault();
+    //localStorage.removeItem('list');
+}
+
+//set back to default 
+function setBackToDefault() {
+    grocery.value = "";
+    editFlag = false;
+    editID = "";
+    submitBtn.textContent = "submit";
+}
+
+// ********* LOCAL STORAGE ************
+function addToLocalStorage(id, value) {
+    console.log("added to local storage");
 }
